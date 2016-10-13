@@ -1,0 +1,90 @@
+<!DOCTYPE html> <!--  Jukka Pirinen 1500912 -->
+<html>          <!--    MyThings tehtävä    -->
+  <head>
+    <title>MyThings</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      html, body {
+        height: 90%;
+        width: 90%;
+        margin: 10;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+    </style>
+  </head>   <!-- HEADERI LOPPUU-->
+  
+  <body>
+    <div id="map"></div>
+    <script>
+      var map;
+      var markers = [];   //Merkkien taulukko
+      
+      function initMap() {
+        var myCoord = {lat: 62.595, lng: 29.790};
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: myCoord,
+          zoom: 12
+        });             //Kartan keskipiste
+          
+        var contentString = '<div id ="content">'+ 
+          '</div>'+ 
+          '<h1 id "firstHeading" class="firstHeading">Thing 1</h1>'+
+          '<div id="bodycontent">'+ 
+          '<p>testitekstiä, testitekstiä, testitekstiä, testitekstiä, testitekstiä ' +
+          'lisää testitekstiä, lisää testitekstiä </p>'
+          ;
+          
+        var infowindow = new google.maps.InfoWindow({
+          content: contentString// + myCoord  //-myCoord?
+        }); //infolaatikko loppuu
+        
+        var marker = new google.maps.Marker({ //aloitusmerkki
+          position: myCoord,
+          map: map,
+        });
+            //laatikon avaus
+        marker.addListener('click', function() {
+          infowindow.open(map, marker); //marker
+        }); //laatikon avaus loppuu
+            //uuden tiedon asettaminen alkaa
+        map.addListener('click', function(event) {   //merkkien laitto
+          addMarker(event.latLng);
+          //infowindow.open(map, marker); //tarviiko?
+
+        }); //uuden tiedon asettaminen loppuu
+
+      } //initmap end
+       
+      function addMarker(location) {  //laitetaan merkki, ja sijoitetaan se merkkitaulukkoon 
+        var marker = new google.maps.Marker({
+          position: location,
+          map: map,
+          draggable: true,
+          animation: google.maps.Animation.DROP
+        });
+        var infowindow = new google.maps.InfoWindow({   //laittaa koordinaattien tiedot pisteeseen
+          //content: 'Latitude: ' + location.lat() + '<br>Longitude: ' + location.lng() //laittaa koordinaattien tiedot pisteeseen, siirretty -->
+        });
+        infowindow.open(map,marker);  //laittaa koordinaattien tiedot pisteeseen
+        infowindow.setContent('<form name="tiedot" action="" onsubmit="" method="post"; ><u><b>Anna MyThings tiedot</b></u><br>Nimi: <br><input type="text" name="nimi" value=""<br><br>Kuvaus: <br><input type="text" name="kuvaus" value=""<br><br>Muu tieto: <br><input type="text" name="muutieto" value=""<br><br><button onclick="lisää">Lisää</button> <button onclick="etsi">Etsi</button> <button onclick="poista">Poista</button> <button onclick="paivita">Päivitä</button></form>' + '<b>Sijainti:</b><br>' + 'Latitude: ' + location.lat() + '<br>Longitude: ' + location.lng());
+        $('.infotext').val('yes');  //tämä ja ^ avaa uuden tekstinsyöttöikkunan uudelle pisteelle
+        
+        markers.push(marker);       //marker markers taulukkoon
+      }
+      //---------------------------------------------------------------------------
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPvr-s66_RRyc3lPXYR7hA7_Mb2d-A2o8&callback=initMap"
+    async defer></script>
+        <!-- Form alkaa --> 
+    <form name="tiedot" action="MyThingsStart.html" onsubmit="" method="post"; >
+    <br>
+	  <button onclick="logout">Log out</button> 
+	  </form>
+	        <!-- Form loppuu -->
+  </body>
+</html>
